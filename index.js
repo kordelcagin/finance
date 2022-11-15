@@ -4,12 +4,12 @@ const SuperTrend = require("supertrend-indicator");
 const app = express();
 const port = 3000;
 let signal = 2;
-let data = [];
 
 app.get("/", async (req, res) => {
+  let data = [];
   await yahooFinance.historical(
     {
-      symbol: "EREGL.IS",
+      symbol: "HEKTS.IS",
       from: "2015-01-01",
       to: new Date().toISOString().slice(0, 10),
       period: "d",
