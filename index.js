@@ -9,24 +9,6 @@ const today = new Date();
 const tomorrow = new Date(today);
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-app.get("/coin", async (req, res) => {
-  let datas = await getCoinData();
-  let superTrendData = SuperTrend(datas, 3, 10).reverse();
-  const lastDatas = superTrendData.slice(0, 2);
-
-  if (lastDatas.length > 1) {
-    if (lastDatas[0].trendDirection > lastDatas[1].trendDirection) {
-      console.log(" AL");
-    } else if (lastDatas[0].trendDirection < lastDatas[1].trendDirection) {
-      console.log(" SAT");
-    } else {
-      console.log(" HOLD");
-    }
-  }
-
-  res.send(lastDatas);
-});
-
 app.get("/", async (req, res) => {
   let buySymbols = "";
   let sellSymbols = "";
@@ -34,16 +16,16 @@ app.get("/", async (req, res) => {
   let sell = 0;
   await yahooFinance.historical(
     {
-      symbols: ["VESTL.IS"], //await getData(),
+      symbols: await getData(),
       from: "2017-01-01",
-      to: tomorrow.toISOString().slice(0, 10),
+      to: today.toISOString().slice(0, 10),
       period: "d",
     },
     function (err, result) {
-      //console.log(err, result);
+      console.log(tomorrow.toISOString().slice(0, 10));
       Object.values(result).forEach((element, key) => {
         if (element.length > 0) {
-          let superTrendData = SuperTrend(element.reverse(), 3, 10).reverse();
+          const superTrendData = SuperTrend(element.reverse(), 3, 10).reverse();
           const lastDatas = superTrendData.slice(0, 2);
           if (lastDatas.length > 1) {
             if (lastDatas[0].trendDirection > lastDatas[1].trendDirection) {
@@ -55,7 +37,7 @@ app.get("/", async (req, res) => {
               sell = 1;
               console.log(element[0].symbol + " SAT");
             } else {
-              console.log(element[0].symbol + " HOLD");
+              console.log(element[0].symbol);
             }
           }
         }
@@ -73,25 +55,6 @@ app.get("/", async (req, res) => {
 
   res.send("OK");
 });
-
-const getCoinData = async () => {
-  let alldata = [];
-  const url = "https://api.binance.me/api/v1/klines?symbol=ETHTRY&interval=4h&limit=1000";
-  await axios
-    .get(url)
-    .then((res) => {
-      res.data.forEach((element) => {
-        alldata.push({
-          //open: element[1],
-          high: element[2] * 1,
-          low: element[3] * 1,
-          close: element[4] * 1,
-        });
-      });
-    })
-    .catch((err) => console.log(err));
-  return alldata;
-};
 
 const getData = async () => {
   let allSymbols = [];
