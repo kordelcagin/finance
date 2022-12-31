@@ -15,6 +15,7 @@
     "google-finance": "^0.1.12",
     "stockmarket-indicator": "^1.0.7",
     "supertrend-indicator": "^1.0.6",
-    "yahoo-finance": "^0.3.7"
+    "yahoo-finance": "^0.3.7",
+    "yahoo-finance2": "^2.3.10"
   }
 }
