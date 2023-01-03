@@ -11,7 +11,7 @@ app.get("/2", async (req, res) => {
   let buySymbols = "";
   let sellSymbols = "";
   let symbols = await getData();
-  //let symbols = ["SASA.IS"];
+  //let symbols = ["SASA.IS", "AHGAZ.IS", "TERA.IS"];
 
   await Promise.all(
     symbols.map(async (element) => {
@@ -21,20 +21,20 @@ app.get("/2", async (req, res) => {
         if (datas.length > 0) {
           const lastDatas = await getStData(datas);
           if (lastDatas.length > 1) {
-            //console.log(lastDatas[0], lastDatas[1]);
-            if (lastDatas[0].direction == 1 && lastDatas[1].direction == -1) {
-              buySymbols += "<br>-" + element.replace(".IS", "");
-              console.log(element + " AL");
-            } else if (lastDatas[0].direction == -1 && lastDatas[1].direction == 1) {
+            //console.log(lastDatas);
+            if (lastDatas[0].direction === 1 && lastDatas[1].direction === -1) {
               sellSymbols += "<br>-" + element.replace(".IS", "");
               console.log(element + " SAT");
+            } else if (lastDatas[0].direction === -1 && lastDatas[1].direction === 1) {
+              buySymbols += "<br>-" + element.replace(".IS", "");
+              console.log(element + " AL");
             } else {
               console.log(element);
             }
           }
         }
       } catch (err) {
-        console.log(err);
+        console.log(element + " - " + err);
       }
     })
   );
